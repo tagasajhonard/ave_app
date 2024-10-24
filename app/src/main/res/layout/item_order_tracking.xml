@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="10dp"
+    android:orientation="horizontal">
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/dateandtime"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/herobold"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14dp"
+            />
+    </LinearLayout>
+    <!-- Left Border -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <View
+            android:id="@+id/circle"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_gravity="top|center_horizontal"
+            android:background="@drawable/circle_background" />
+        <View
+            android:id="@+id/vertical_line"
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:background="@android:color/darker_gray" />
+    </LinearLayout>
+
+
+    <!-- Main Content -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginBottom="20dp"
+        android:layout_marginStart="16dp">
+
+    <TextView
+        android:id="@+id/timeline_text"
+        android:fontFamily="@font/herobold"
+        android:textSize="17dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your parcel is preparing"
+        android:textColor="@color/topbrown"
+        />
+
+        <TextView
+            android:id="@+id/sub_text_view"
+            android:fontFamily="@font/heroregular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="@android:color/darker_gray" />
+
+</LinearLayout>
+
+    </LinearLayout>

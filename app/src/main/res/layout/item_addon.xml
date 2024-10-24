@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        app:cardElevation="8dp"
+        app:cardCornerRadius="8dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:background="@drawable/card_border"
+            android:orientation="horizontal">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="8dp">
+                <ImageView
+                    android:scaleType="center"
+                    android:id="@+id/addOnImg"
+                    android:layout_width="80dp"
+                    android:layout_height="100dp"
+                    />
+            </androidx.cardview.widget.CardView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/addonName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/herobold"
+                        android:textSize="17dp"
+                        android:textColor="@color/brown"
+                        android:layout_marginStart="10dp"
+                        android:textAlignment="center"/>
+                    <TextView
+                        android:id="@+id/addonPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/herobold"
+                        android:textSize="17dp"
+                        android:layout_marginStart="10dp"
+                        android:textColor="@color/brown"
+                        android:textAlignment="center"/>
+
+
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+                <LinearLayout
+                    android:padding="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"/>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/btnborder"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/decrementButton"
+                            android:layout_width="20dp"
+                            android:fontFamily="@font/herobold"
+                            android:background="@drawable/minus"
+                            android:layout_marginStart="5dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_height="20dp"  />
+                        <TextView
+                            android:id="@+id/quantity"
+                            android:layout_width="wrap_content"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginEnd="20dp"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="25sp" />
+                        <TextView
+                            android:id="@+id/incrementButton"
+                            android:layout_width="20dp"
+                            android:fontFamily="@font/herobold"
+                            android:background="@drawable/plus"
+                            android:layout_marginEnd="5dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_height="20dp" />
+
+
+                    </LinearLayout>
+            </LinearLayout>
+
+            </LinearLayout>
+
+
+
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
+</LinearLayout>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "928838424164",
+    "project_id": "avenue-t-house",
+    "storage_bucket": "avenue-t-house.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:928838424164:android:eb67fb5bf307e9c1f57171",
+        "android_client_info": {
+          "package_name": "ordering.app.avenuet_housebongabong"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1LONlVKIOQSr5RMNTlkFbEc_8f8gWmKg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

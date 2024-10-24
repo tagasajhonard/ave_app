@@ -1,0 +1,96 @@
+<resources>
+    <string name="app_name">Avenue T-house Bongabong</string>
+    <string name="facebook_app_id">983373886542118</string>
+    <string name="facebook_client_token">569faaa4fc1e46f141bae891ae1f7fc0</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="select_town_hint">Choose a Town</string>
+    <string name="select_street_hint">Choose a Street</string>
+
+
+    <string-array name="spinner_items">
+        <item>Bansud</item>
+        <item>Bongabong</item>
+        <item>Roxas</item>
+    </string-array>
+
+    <string-array name="spinner_street_bansud">
+        <item>Alcadesma</item>
+        <item>Conrazon</item>
+        <item>Malo</item>
+        <item>Manihala</item>
+        <item>Pag-Asa</item>
+        <item>Poblacion</item>
+        <item>Proper Bansud</item>
+        <item>Rosario</item>
+        <item>Salcedo</item>
+        <item>Sumagui</item>
+    </string-array>
+
+    <string-array name="spinner_street_bongabong">
+        <item>Anilao</item>
+        <item>Aplaya</item>
+        <item>Bagong Bayan I</item>
+        <item>Bagong Bayan II</item>
+        <item>Batangan</item>
+        <item>Borbon</item>
+        <item>Buenavista</item>
+        <item>Canaan</item>
+        <item>Dayhagan</item>
+        <item>Formon</item>
+        <item>Hagupit</item>
+        <item>Hagan</item>
+        <item>Ipil</item>
+        <item>Kaligtasan</item>
+        <item>Labasan</item>
+        <item>Labonan</item>
+        <item>Libertad</item>
+        <item>Lisap</item>
+        <item>Luna</item>
+        <item>Malitbog</item>
+        <item>Mapang</item>
+        <item>Masaguisi</item>
+        <item>Mina de Oro</item>
+        <item>Morente</item>
+        <item>Ogbot</item>
+        <item>Orconuma</item>
+        <item>Poblacion</item>
+        <item>Pulo Sanghi</item>
+        <item>Sagana</item>
+        <item>San Isidro</item>
+        <item>San Jose</item>
+        <item>San Juan</item>
+        <item>Santa Cruz</item>
+        <item>Sigange</item>
+        <item>Tawas</item>
+    </string-array>
+
+    <string-array name="spinner_street_roxas">
+        <item>Bagumbayan</item>
+        <item>Cantil</item>
+        <item>Happy Valley</item>
+        <item>Libertad</item>
+        <item>Libtong</item>
+        <item>Mabini</item>
+        <item>Maraska</item>
+        <item>Odiong</item>
+        <item>Paclasan</item>
+        <item>Paclasan II</item>
+        <item>Poblacion</item>
+        <item>San Agustin</item>
+        <item>San Antonio</item>
+        <item>San Isidro</item>
+        <item>San Jose</item>
+        <item>San Miguel</item>
+        <item>San Rafael</item>
+        <item>San Roque</item>
+        <item>San Vicente</item>
+        <item>Silonay</item>
+        <item>Small Tabinay</item>
+        <item>Victoria</item>
+    </string-array>
+
+    <string name="heart">Heart</string>
+
+
+</resources>

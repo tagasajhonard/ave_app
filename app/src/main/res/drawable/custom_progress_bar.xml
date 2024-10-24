@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/drawable/custom_progress_bar.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Background of the progress bar -->
+    <item android:id="@android:id/background">
+        <shape>
+            <corners android:radius="10dp" /> <!-- Rounded corners -->
+            <solid android:color="#CCCCCC" /> <!-- Background color -->
+        </shape>
+    </item>
+
+    <!-- Progress of the progress bar -->
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape>
+                <corners android:radius="10dp" /> <!-- Rounded corners -->
+                <solid android:color="#FF5722" /> <!-- Progress color -->
+            </shape>
+        </clip>
+    </item>
+
+</layer-list>
