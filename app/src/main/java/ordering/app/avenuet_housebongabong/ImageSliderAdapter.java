@@ -54,6 +54,7 @@ public class ImageSliderAdapter extends RecyclerView.Adapter<ImageSliderAdapter.
             descriptionTextView = itemView.findViewById(R.id.description);
         }
     }
+
 }
 
 

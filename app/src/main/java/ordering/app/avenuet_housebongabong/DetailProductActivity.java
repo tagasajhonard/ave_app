@@ -75,9 +75,14 @@ public class DetailProductActivity extends AppCompatActivity {
     private SeekBar seekBar;
     private TextView marker0, marker25, marker50, marker75, marker100;
     private int defaultColor, selectedColor;
+    private Product product;
+    private ImageView heartImageView;
+    private boolean isFavorite = false;
+    private DatabaseReference databaseReference;
 
 
-    @SuppressLint("MissingInflatedId")
+
+    @SuppressLint({"MissingInflatedId", "SetTextI18n"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +111,13 @@ public class DetailProductActivity extends AppCompatActivity {
                 window.getDecorView().setSystemUiVisibility(window.getDecorView().getSystemUiVisibility() & ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
             }
         }
+
+        String productName = getIntent().getStringExtra("productName");
+
+
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        String fullName = sharedPreferences.getString("fullName", "No name found");
+
 
         RecyclerView addonsRecyclerView = findViewById(R.id.addonsRecyclerView);
 
@@ -154,6 +166,7 @@ public class DetailProductActivity extends AppCompatActivity {
 
 // Fetch the data from Firebase
         databaseReference.addValueEventListener(new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // Clear the list before adding new data
@@ -194,7 +207,7 @@ public class DetailProductActivity extends AppCompatActivity {
 
 
         String productImageURL = getIntent().getStringExtra("productImageURL");
-        String productName = getIntent().getStringExtra("productName");
+//        String productName = getIntent().getStringExtra("productName");
         Intent intent = getIntent();
         boolean isEditing = intent.getBooleanExtra("isEditing", false);
         if (isEditing) {
@@ -308,7 +321,6 @@ public class DetailProductActivity extends AppCompatActivity {
 
 
 
-        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
 
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
@@ -624,7 +636,6 @@ public class DetailProductActivity extends AppCompatActivity {
             }
         });
     }
-
 
 
 //    private void saveToFirebase(String productName, int quantity, String productPrice, String size) {

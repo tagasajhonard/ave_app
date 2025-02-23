@@ -11,6 +11,7 @@
     android:fitsSystemWindows="true">
 
     <ScrollView
+        android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -299,9 +300,93 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/white"
+            android:orientation="vertical">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/herobold"
+                android:textSize="17dp"
+                android:text="Delivery Method"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/herobold"
+                        android:layout_marginStart="10dp"
+                        android:textSize="16dp"
+                        android:layout_gravity="center_vertical"
+                        android:text="Delivery"/>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+
+                    <RadioButton
+                        android:id="@+id/deliver"
+                        android:theme="@style/RadioButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/herobold"
+                        android:layout_marginStart="10dp"
+                        android:textSize="16dp"
+                        android:layout_gravity="center_vertical"
+                        android:text="Pick Up"/>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+
+                    <RadioButton
+                        android:id="@+id/pickUp"
+                        android:theme="@style/RadioButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/paymentMethod"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="15dp"
@@ -323,6 +408,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/layoutCash"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingStart="5dp"
@@ -357,6 +443,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/cashondelivery"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingStart="5dp"
@@ -444,7 +531,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/herobold"
                 android:textSize="17dp"
-                android:text="Ref# of Transaction"/>
+                android:text="Transaction Details"/>
 
 
             <LinearLayout
@@ -454,17 +541,10 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Gcash Number"
-                    android:textAlignment="center"
-                    android:fontFamily="@font/herobold"/>
-
-                <TextView
                     android:id="@+id/gcashnum"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="09467030726"
+                    android:text="Jhonard Tagasa"
                     android:textAlignment="center"
                     android:fontFamily="@font/herobold"
                     android:textSize="17dp"/>
@@ -473,7 +553,7 @@
                     android:id="@+id/gcashname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Jhonard Tagasa"
+                    android:text="Gcash # : 09467030726"
                     android:textAlignment="center"
                     android:fontFamily="@font/herobold"
                     android:textSize="20dp"/>
@@ -483,44 +563,27 @@
             </LinearLayout>
 
 
-            <LinearLayout
-                android:layout_marginTop="10dp"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/holder2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <TextView
+                style="@style/TextInputLayoutStyle"
+                android:inputType="textNoSuggestions"
+                android:importantForAutofill="no"
+                android:hint="Ref #">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtRefNumber"
+                    android:importantForAutofill="no"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Upload Gcash Receipt"
-                    android:fontFamily="@font/herobold"
-                    android:textAlignment="center"
-                    android:textSize="17dp"/>
-                <ImageView
-                    android:scaleType="centerCrop"
-                    android:id="@+id/gcashImage"
-                    android:layout_marginTop="10dp"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/gcashimg"/>
-
-                <TextView
-                    android:id="@+id/uploadgcash"
-                    android:background="@drawable/add_to_cart"
-                    android:padding="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:fontFamily="@font/herobold"
-                    android:textColor="@color/white"
-                    android:layout_marginTop="15dp"
-                    android:layout_gravity="center"
-                    android:textSize="17dp"
-                    android:text="Upload"/>
-            </LinearLayout>
+                    android:maxLength="15"
+                    android:fontFamily="@font/heroregular"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
 
 
-            </LinearLayout>
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -542,9 +605,24 @@
             android:fontFamily="@font/heroregular"
             android:textSize="15dp"
             android:textStyle="bold"
-            android:text="By placing an order, you agreed to our Avenue Tea House Privacy Policy"
-            android:layout_marginBottom="30dp"
+            android:text="By placing an order, you agreed to our "
             />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Avenue Tea House Terms &amp; Condition"
+                android:fontFamily="@font/herobold"
+                android:textSize="15dp"
+                android:layout_marginBottom="30dp"/>
+        </LinearLayout>
+
 
 
         <TextView

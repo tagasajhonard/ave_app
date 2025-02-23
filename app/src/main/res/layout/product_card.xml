@@ -35,6 +35,25 @@
                     android:scaleType="center"
                     android:layout_height="match_parent"
                     />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/heartshadow"
+                    android:layout_gravity="end"
+                    app:cardCornerRadius="50dp">
+                    <ImageView
+                        android:id="@+id/heartImageView"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_margin="10dp"
+                        android:src="@drawable/heart_outline"
+                        android:contentDescription="@string/heart"
+                        android:clickable="true"
+                        android:focusable="true"
+                        />
+
+                </RelativeLayout>
                 <FrameLayout
                     android:visibility="gone"
                     android:background="@android:color/black"
@@ -83,30 +102,14 @@
                         android:id="@+id/prodPrice"
                         android:gravity="center_vertical"
                         android:textSize="15dp"
-                        android:layout_marginStart="10dp"
+
+                        android:padding="10dp"
                         android:fontFamily="@font/herobold"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:textColor="@color/white"
                         />
 
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_weight="1"/>
-
-                    <ImageView
-                        android:id="@+id/heartImageView"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:src="@drawable/heart_outline"
-                        android:contentDescription="@string/heart"
-                        android:layout_marginEnd="10dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:layout_gravity="center_vertical"/>
 
                 </LinearLayout>
 

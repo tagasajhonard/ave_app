@@ -34,10 +34,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -122,6 +125,12 @@ public class to_rate extends Fragment {
                         ratingData.put("serviceRating", serviceRating);
                         ratingData.put("customerName", custname);
                         ratingData.put("cartItemId", item.getCartItemId());
+                        ratingData.put("productName", item.getProductName());
+
+
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                        String currentDateAndTime = sdf.format(new Date());
+                        ratingData.put("timestamp", currentDateAndTime); // Store the formatted date and time
 
 
                         if (!feedback.isEmpty()) {

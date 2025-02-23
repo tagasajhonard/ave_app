@@ -70,9 +70,9 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import dev.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
 import dev.shreyaspatil.MaterialDialog.MaterialDialog;
 
-public class homeActivity extends AppCompatActivity implements Milktea.OnProductClickListener, fruit_tea.OnProductClickListener, frappe.OnProductClickListener, milkshake.OnProductClickListener, coolers.OnProductClickListener, sandwich.OnProductClickListener, pasta.OnProductClickListener, pizza.OnProductClickListener, mozzarella.OnProductClickListener, fries.OnProductClickListener, cheese_sticks.OnProductClickListener {
+public class homeActivity extends AppCompatActivity implements home.OnProductClickListener, Milktea.OnProductClickListener, fruit_tea.OnProductClickListener, frappe.OnProductClickListener, milkshake.OnProductClickListener, coolers.OnProductClickListener, sandwich.OnProductClickListener, pasta.OnProductClickListener, pizza.OnProductClickListener, mozzarella.OnProductClickListener, fries.OnProductClickListener, cheese_sticks.OnProductClickListener {
     private androidx.appcompat.widget.SearchView searchView;
-    private LinearLayout chat;
+    private LinearLayout chat, ratings;
     private FrameLayout cart;
     private TextView cartItemCountTextView;
     private ImageView detailProductImage, showdp;
@@ -200,6 +200,14 @@ public class homeActivity extends AppCompatActivity implements Milktea.OnProduct
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(homeActivity.this, Favorites.class);
+                startActivity(intent);
+            }
+        });
+        ratings = findViewById(R.id.ratings);
+        ratings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(homeActivity.this, ratingPage.class);
                 startActivity(intent);
             }
         });
@@ -357,7 +365,7 @@ public class homeActivity extends AppCompatActivity implements Milktea.OnProduct
 //        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         String fullName = sharedPreferences.getString("fullName", "User");
         String savedUsername = sharedPreferences.getString("username", "");
-        Log.d("MyAppTag", "hoyyyyyy ito yungggg Saved Username: " + savedUsername);
+
 
         loadCartItemCount(fullName);
 

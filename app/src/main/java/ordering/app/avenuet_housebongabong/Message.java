@@ -5,16 +5,20 @@ public class Message {
     private String sender;
     private long timestamp;
     private String formattedTime;
+    private String imageUrl;
 
     // No-argument constructor required for Firebase
     public Message() {
     }
+
+
 
     public Message(String text, String sender, long timestamp, String formattedTime) {
         this.text = text;
         this.sender = sender;
         this.timestamp = timestamp;
         this.formattedTime = formattedTime;
+        this.imageUrl = null;
     }
 
     // Getters and setters
@@ -48,5 +52,12 @@ public class Message {
 
     public void setFormattedTime(String formattedTime) {
         this.formattedTime = formattedTime;
+    }
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

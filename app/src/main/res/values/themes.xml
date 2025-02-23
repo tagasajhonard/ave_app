@@ -10,8 +10,7 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
-    <style name="TextInputLayoutStyle"
-        parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+    <style name="TextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="boxStrokeColor">#8B4513</item>
         <item name="boxStrokeWidth">1dp</item>
         <item name="errorEnabled">true</item>

@@ -67,6 +67,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLength="10"
+                    android:inputType="number"
                     android:background="@drawable/phoneborder"
                     android:padding="5sp"
                     android:textSize="25sp"/>

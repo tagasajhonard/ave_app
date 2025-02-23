@@ -9,16 +9,20 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +33,8 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,6 +42,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -56,15 +63,7 @@ public class order_summary extends AppCompatActivity {
     private OrderSummaryAdapter adapter;
     List<CartItem> selectedItems;
 
-    private static final long DOUBLE_PRESS_INTERVAL = 2000; // 2 seconds
-    private boolean isBackPressedOnce = false;
     private Handler handler;
-    private static final int PICK_IMAGE_REQUEST = 1;
-    private Uri imageUri;
-    private ImageView gcashImageView;
-    private TextView uploadgcash;
-
-    private String orderId;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -72,8 +71,6 @@ public class order_summary extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_summary);
 
-        gcashImageView = findViewById(R.id.gcashImage);
-        uploadgcash = findViewById(R.id.uploadgcash);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
@@ -87,12 +84,13 @@ public class order_summary extends AppCompatActivity {
             }
         }
 
-        uploadgcash.setOnClickListener(v -> openFileChooser());
-
         handler = new Handler();
 
         TextView subTotalTextView = findViewById(R.id.subTotalTextView);
         TextView placeOrder = findViewById(R.id.placeorder);
+
+
+        TextInputLayout holder2 = findViewById(R.id.holder2);
 
 
         recyclerView = findViewById(R.id.recyclerViewOrderSummary);
@@ -117,11 +115,42 @@ public class order_summary extends AppCompatActivity {
         }
 
 
+        ScrollView scrollView = findViewById(R.id.scroll);
+
+
         RadioButton radioCOD = findViewById(R.id.cod);
         RadioButton radioGcash = findViewById(R.id.gcash);
         RadioButton radioCash = findViewById(R.id.cash);
+        RadioButton radioPick = findViewById(R.id.pickUp);
+        RadioButton radioDeliv = findViewById(R.id.deliver);
 
+        LinearLayout cash = findViewById(R.id.layoutCash);
         LinearLayout gcashInfo = findViewById(R.id.gcash_info);
+        LinearLayout cod = findViewById(R.id.cashondelivery);
+        LinearLayout payment = findViewById(R.id.paymentMethod);
+
+        payment.setVisibility(View.GONE);
+
+        TextInputEditText txtRefNumber = findViewById(R.id.txtRefNumber);
+
+        radioDeliv.setOnClickListener(v ->{
+            radioDeliv.setChecked(true);
+            radioPick.setChecked(false);
+            cash.setVisibility(View.GONE);
+            cod.setVisibility(View.VISIBLE);
+            payment.setVisibility(View.VISIBLE);
+            scrollView.post(() -> scrollView.smoothScrollTo(0, payment.getTop()));
+
+        });
+        radioPick.setOnClickListener(v ->{
+            radioDeliv.setChecked(false);
+            radioPick.setChecked(true);
+            cash.setVisibility(View.VISIBLE);
+            cod.setVisibility(View.GONE);
+            payment.setVisibility(View.VISIBLE);
+            scrollView.post(() -> scrollView.smoothScrollTo(0, payment.getTop()));
+
+        });
 
 // When Cash on Delivery (COD) is selected
         radioCOD.setOnClickListener(v -> {
@@ -137,6 +166,7 @@ public class order_summary extends AppCompatActivity {
             radioCOD.setChecked(false);
             radioCash.setChecked(false);
             gcashInfo.setVisibility(View.VISIBLE);
+            scrollView.post(() -> scrollView.smoothScrollTo(0, gcashInfo.getTop()));
         });
 
         radioCash.setOnClickListener(v -> {
@@ -146,6 +176,50 @@ public class order_summary extends AppCompatActivity {
             gcashInfo.setVisibility(View.GONE);
         });
 
+        String refNumber = txtRefNumber.getText().toString().trim();
+
+        txtRefNumber.addTextChangedListener(new TextWatcher() {
+            private boolean isUpdating;
+            private final StringBuilder current = new StringBuilder();
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (isUpdating) {
+                    isUpdating = false;
+                    return;
+                }
+
+                // Remove spaces and non-digits
+                String cleanString = s.toString().replaceAll("\\D", "");
+
+                int length = cleanString.length();
+
+                if (length > 0) {
+                    isUpdating = true;
+                    current.setLength(0);
+
+                    // Add formatting as per the 4-3-6 pattern
+                    for (int i = 0; i < length && i < 15; i++) {
+                        if (i == 4 || i == 7) {  // Positions where we insert a space
+                            current.append(" ");
+                        }
+                        current.append(cleanString.charAt(i));
+                    }
+
+                    // Set the formatted text
+                    txtRefNumber.setText(current.toString());
+                    txtRefNumber.setSelection(current.length());  // Move cursor to end
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
 
         // Retrieve full name from SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
@@ -231,9 +305,18 @@ public class order_summary extends AppCompatActivity {
                                     paymentMethod = "GCash";
                                 }
 
+                                String deliveryMethod;
+                                if (radioPick.isChecked()){
+                                    deliveryMethod = "Pick Up";
+                                }else {
+                                    deliveryMethod = "Delivery";
+                                }
+
                                 DatabaseReference ordersRef = FirebaseDatabase.getInstance().getReference("Orders");
                                 DatabaseReference cartRef = FirebaseDatabase.getInstance().getReference("UserCart").child(custname);
                                 DatabaseReference counterRef = FirebaseDatabase.getInstance().getReference("orderCounter/currentOrderId");
+                                DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("Users").child(fullName);
+
                                 counterRef.runTransaction(new Transaction.Handler() {
                                     @Override
                                     public Transaction.Result doTransaction(MutableData currentData) {
@@ -249,6 +332,16 @@ public class order_summary extends AppCompatActivity {
                                     @Override
                                     public void onComplete(DatabaseError databaseError, boolean committed, DataSnapshot dataSnapshot) {
                                         if (committed) {
+
+                                            String refNumber = txtRefNumber.getText().toString().replaceAll("\\s+", "");
+
+                                            if (radioGcash.isChecked()) {
+                                                if (refNumber.isEmpty()) {
+                                                    txtRefNumber.setError("Reference number is required");
+                                                    txtRefNumber.requestFocus();
+                                                    return;
+                                                }
+                                            }
 
                                             Long incrementingOrderId = dataSnapshot.getValue(Long.class);
                                             String orderId = "Order" + incrementingOrderId;
@@ -286,54 +379,80 @@ public class order_summary extends AppCompatActivity {
                                                 itemMap.put("addons", selectedAddons);
                                                 itemsList.add(itemMap);
                                             }
-                                            Map<String, Object> orderData = new HashMap<>();
-                                            orderData.put("fullName", custname);
-                                            orderData.put("contact", "(+63)" + contact);
-                                            orderData.put("address", address);
-                                            orderData.put("paymentMethod", paymentMethod);
-                                            orderData.put("items", itemsList);
-                                            orderData.put("status", "pending");
-                                            orderData.put("orderId", orderId);
-                                            orderData.put("total", total);
 
-                                            SimpleDateFormat dateTimeFormat = new SimpleDateFormat("M/d/yyyy, h:mm:ss a", Locale.getDefault());
-                                            String orderTime = dateTimeFormat.format(new Date());
-                                            orderData.put("orderTime", orderTime);
+                                            usersRef.child("fcmToken").addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot snapshot) {
+                                                    String fcmToken = snapshot.getValue(String.class);
 
-                                            ordersRef.child(custname).child(orderId).setValue(orderData)
-                                                    .addOnCompleteListener(task -> {
-                                                        if (task.isSuccessful()) {
-                                                            for (CartItem item : selectedItems) {
-                                                                String cartItemId = item.getCartItemId();
-                                                                cartRef.child(cartItemId).removeValue();
-                                                            }
-                                                            MotionToast.Companion.createColorToast(order_summary.this,
-                                                                    "Hurray success 😍",
-                                                                    "Order Completed!",
-                                                                    MotionToastStyle.SUCCESS,
-                                                                    MotionToast.GRAVITY_BOTTOM,
-                                                                    MotionToast.LONG_DURATION,
-                                                                    ResourcesCompat.getFont(order_summary.this, R.font.herobold));
+                                                    Map<String, Object> orderData = new HashMap<>();
+                                                    orderData.put("fullName", custname);
+                                                    orderData.put("contact", "(+63)" + contact);
+                                                    orderData.put("address", address);
+                                                    orderData.put("paymentMethod", paymentMethod);
+                                                    orderData.put("items", itemsList);
+                                                    orderData.put("status", "pending");
+                                                    orderData.put("fcmToken", fcmToken);
 
-                                                            Intent intents = new Intent(order_summary.this, purchase.class);
-                                                            startActivity(intents);
-                                                            finish();
-                                                        } else {
-                                                            // Show failure MotionToast
-                                                            MotionToast.Companion.createColorToast(order_summary.this,
-                                                                    "Failed ☹️",
-                                                                    "Order Failed!",
-                                                                    MotionToastStyle.ERROR,
-                                                                    MotionToast.GRAVITY_BOTTOM,
-                                                                    MotionToast.LONG_DURATION,
-                                                                    ResourcesCompat.getFont(order_summary.this, R.font.herobold));
-                                                        }
-                                                    });
-                                        } else {
+                                                    if (!refNumber.isEmpty()) {
+                                                        orderData.put("refNumber", refNumber);
+                                                    } else {
+                                                        orderData.put("refNumber", "null");
+                                                    }
+                                                    orderData.put("orderId", orderId);
+                                                    orderData.put("deliveryMethod", deliveryMethod);
+                                                    orderData.put("total", total);
+
+
+                                                    SimpleDateFormat dateTimeFormat = new SimpleDateFormat("M/d/yyyy, h:mm:ss a", Locale.getDefault());
+                                                    String orderTime = dateTimeFormat.format(new Date());
+                                                    orderData.put("orderTime", orderTime);
+
+                                                    ordersRef.child(custname).child(orderId).setValue(orderData)
+                                                            .addOnCompleteListener(task -> {
+                                                                if (task.isSuccessful()) {
+                                                                    for (CartItem item : selectedItems) {
+                                                                        String cartItemId = item.getCartItemId();
+                                                                        cartRef.child(cartItemId).removeValue();
+                                                                    }
+                                                                    MotionToast.Companion.createColorToast(order_summary.this,
+                                                                            "Hurray success 😍",
+                                                                            "Order Completed!",
+                                                                            MotionToastStyle.SUCCESS,
+                                                                            MotionToast.GRAVITY_BOTTOM,
+                                                                            MotionToast.LONG_DURATION,
+                                                                            ResourcesCompat.getFont(order_summary.this, R.font.herobold));
+
+                                                                    Intent intents = new Intent(order_summary.this, receipt.class);
+                                                                    intents.putExtra("orderId", orderId);
+                                                                    intents.putExtra("custName", custname);
+                                                                    startActivity(intents);
+                                                                    finish();
+                                                                } else {
+                                                                    // Show failure MotionToast
+                                                                    MotionToast.Companion.createColorToast(order_summary.this,
+                                                                            "Failed ☹️",
+                                                                            "Order Failed!",
+                                                                            MotionToastStyle.ERROR,
+                                                                            MotionToast.GRAVITY_BOTTOM,
+                                                                            MotionToast.LONG_DURATION,
+                                                                            ResourcesCompat.getFont(order_summary.this, R.font.herobold));
+                                                                }
+                                                            });
+                                                }
+
+                                                @Override
+                                                public void onCancelled(DatabaseError error) {
+                                                    Log.e("FirebaseError", "Error retrieving FCM token: " + error.getMessage());
+                                                }
+                                            });
+                                        }
+                                            else {
                                             Log.e("OrderCreation", "Transaction failed: " + databaseError.getMessage());
                                         }
                                     }
                                 });
+
                             } else {
                                 // Password is incorrect
                                 MotionToast.Companion.createColorToast(order_summary.this,
@@ -362,39 +481,6 @@ public class order_summary extends AppCompatActivity {
             }
         });
 
-    }
-
-
-    private void openFileChooser() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
-                && data != null && data.getData() != null) {
-            imageUri = data.getData();
-            // Optionally, display selected image on the UI
-            gcashImageView.setImageURI(imageUri);
-        }
-    }
-
-    private void uploadImageToFirebase(Uri imageUri, OnImageUploadListener listener) {
-        // Assume you have a Firebase Storage reference set up
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference("gcash_images/" + System.currentTimeMillis() + ".jpg");
-
-        storageRef.putFile(imageUri)
-                .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl()
-                        .addOnSuccessListener(uri -> {
-                            listener.onSuccess(uri.toString());
-                        }))
-                .addOnFailureListener(e -> {
-                    listener.onFailure(e.getMessage());
-                });
     }
 
 

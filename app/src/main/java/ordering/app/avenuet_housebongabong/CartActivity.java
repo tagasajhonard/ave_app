@@ -1,23 +1,29 @@
 package ordering.app.avenuet_housebongabong;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -48,6 +54,7 @@ public class CartActivity extends AppCompatActivity {
     private TextView removeButton;
     private TextView subTotalTextView;
     private double subTotal = 0.0;
+    private ImageView tutorial;
 
     @SuppressLint({"MissingInflatedId"})
     @Override
@@ -68,15 +75,41 @@ public class CartActivity extends AppCompatActivity {
             }
         }
 
+
+
         recyclerViewCart = findViewById(R.id.recyclerViewCart);
         recyclerViewCart.setLayoutManager(new LinearLayoutManager(this));
         emptyCartTextView = findViewById(R.id.emptyCartTextView);
+        tutorial = findViewById(R.id.tutorial);
+
+        CheckBox selectAllCheckBox = findViewById(R.id.select_all_checkbox);
+
+// Handle "Select All" functionality
+        selectAllCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            for (CartItem cartItem : cartItemList) {
+                cartItem.setSelected(isChecked); // Update all items' selection state
+            }
+            cartAdapter.notifyDataSetChanged(); // Refresh the RecyclerView
+            updateSubTotal(); // Update subtotal based on selection
+        });
+
+
+
+        tutorial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    new AlertDialog.Builder(CartActivity.this)
+                            .setTitle("How to Place an Order")
+                            .setMessage("1. Select your favorite product.\n2. Choose the size and add-ons.\n3. Add to cart.\n4. Proceed to checkout to place your order.")
+                            .setPositiveButton("Got it", null)
+                            .show();
+            }
+        });
 
 
         cartItemList = new ArrayList<>();
 
         cartAdapter = new CartAdapter(this, cartItemList, (cartItemId, position) -> {
-
             removeItemFromFirebase(cartItemId, cartItemList.get(position), position);
             updateSubTotal();
         }, (cartItem, position) -> {
@@ -115,29 +148,52 @@ public class CartActivity extends AppCompatActivity {
                 recyclerViewCart.getAdapter().notifyItemRemoved(position);
             }
 
-            @Override
-            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                View itemView = viewHolder.itemView;
-                Paint paint = new Paint();
-                paint.setColor(Color.RED);
-                paint.setTextAlign(Paint.Align.CENTER);
-                paint.setTextSize(48);
+            
+@Override
+public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+    View itemView = viewHolder.itemView;
 
-                float itemWidth = itemView.getWidth();
-                float threshold = itemWidth * SWIPE_THRESHOLD_RATIO;
+    // Define paint attributes
+    Paint paint = new Paint();
+    paint.setColor(Color.TRANSPARENT); // Background color for swipe area
 
-                if (dX < -threshold) {
-                    dX = -threshold;
-                }
+    // Threshold for limiting swipe distance
+    float itemWidth = itemView.getWidth();
+    float threshold = itemWidth * SWIPE_THRESHOLD_RATIO;
 
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+    if (dX < -threshold) {
+        dX = -threshold;
+    }
 
-                if (dX < 0) {
-                    float textX = itemView.getRight() - (threshold / 2);
-                    float textY = itemView.getTop() + (itemView.getHeight() / 2);
-                    c.drawText("REMOVE", textX, textY, paint);
-                }
-            }
+    // Draw background for swipe
+    if (dX < 0) {
+        c.drawRect(itemView.getRight() + dX, itemView.getTop(), itemView.getRight(), itemView.getBottom(), paint);
+
+        // Load and position the drawable
+        Drawable binIcon = ContextCompat.getDrawable(recyclerView.getContext(), R.drawable.bin);
+        if (binIcon != null) {
+            // Convert 40dp to pixels
+            int iconSize = (int) (40 * recyclerView.getContext().getResources().getDisplayMetrics().density);
+
+            // Calculate the swipe area width
+            float swipeWidth = -dX; // Convert dX to positive for width calculation
+
+            // Center the icon within the swipe area
+            int iconLeft = itemView.getRight() - (int) ((swipeWidth - iconSize) / 2) - iconSize;
+            int iconRight = iconLeft + iconSize;
+            int iconTop = itemView.getTop() + (itemView.getHeight() - iconSize) / 2;
+            int iconBottom = iconTop + iconSize;
+
+            // Set bounds and draw the icon
+            binIcon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
+            binIcon.draw(c);
+        }
+    }
+
+    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+}
+
+
         });
 
         itemTouchHelper.attachToRecyclerView(recyclerViewCart);

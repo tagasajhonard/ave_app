@@ -23,13 +23,14 @@ public class Product {
     private String productKey;
 
     private String status;
+    private boolean bestSeller;
 
     // Default constructor (required by Firebase)
     public Product() {
     }
 
     // Constructor with parameters
-    public Product(String category, String imageURL, String qrImage, String large, String productName, String regular, String small, String description, String productNameLower, String status) {
+    public Product(String category, String imageURL, String qrImage, String large, String productName, String regular, String small, String description, String productNameLower, String status, boolean bestSeller) {
         this.Category = category;
         this.ImageURL = imageURL;
         this.QRImageURL = qrImage;
@@ -41,6 +42,7 @@ public class Product {
         this.isLiked = false;
         this.productNameLower = productName.toLowerCase();
         this.status  = status;
+        this.bestSeller = bestSeller;
     }
     public boolean isLiked() {
         return isLiked;
@@ -78,6 +80,13 @@ public class Product {
         return Small;
     }
 
+    public boolean isBestSeller() {
+        return bestSeller;
+    }
+
+    public void setBestSeller(boolean bestSeller) {
+        this.bestSeller = bestSeller;
+    }
 
     public String getQrImageURL() {
         return QRImageURL;

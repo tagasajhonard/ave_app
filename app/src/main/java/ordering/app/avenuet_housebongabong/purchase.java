@@ -144,8 +144,8 @@ public class purchase extends AppCompatActivity {
                         tab.setIcon(R.drawable.pending); // Set your custom truck icon
                         break;
                     case 1:
-                        tab.setText("To Ship");
-                        tab.setIcon(R.drawable.toship); // Set your custom truck icon
+                        tab.setText("Preparing");
+                        tab.setIcon(R.drawable.bag); // Set your custom truck icon
                         break;
                     case 2:
                         tab.setText("To Receive");
@@ -203,6 +203,8 @@ public class purchase extends AppCompatActivity {
                 } else {
                     showMoreButton.setVisibility(View.VISIBLE); // Show "Show More" button if there are 3 or more steps
                 }
+
+
             }
 
             @Override

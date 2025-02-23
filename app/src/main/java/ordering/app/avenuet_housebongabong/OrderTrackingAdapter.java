@@ -16,6 +16,8 @@ public class OrderTrackingAdapter extends RecyclerView.Adapter<OrderTrackingAdap
     private List<TrackingStep> visibleTrackingSteps; // List of visible steps
     private boolean isExpanded = false; // Track if all steps are visible
     private static final int MAX_VISIBLE_STEPS = 2; // Set the limit for steps to show initially
+    private boolean showAllSteps = false;
+
 
     public OrderTrackingAdapter(List<TrackingStep> trackingSteps) {
         this.allTrackingSteps = trackingSteps;
@@ -72,6 +74,10 @@ public class OrderTrackingAdapter extends RecyclerView.Adapter<OrderTrackingAdap
 
         holder.verticalLine.setVisibility(position == 0 ? View.GONE : View.VISIBLE);
 
+    }
+    public void showAllSteps() {
+        this.showAllSteps = true; // Set the flag to show all steps
+        notifyDataSetChanged(); // Notify the adapter to refresh the view
     }
 
     @Override

@@ -3,9 +3,12 @@ package ordering.app.avenuet_housebongabong;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -60,21 +63,40 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         if (holder.getItemViewType() == VIEW_TYPE_SENT) {
             SentMessageViewHolder sentViewHolder = (SentMessageViewHolder) holder;
-            sentViewHolder.messageText.setText(message.getText());
-            if (shouldShowTimestamp) {
-                sentViewHolder.messageTime.setText(message.getFormattedTime());
-                sentViewHolder.messageTime.setVisibility(View.VISIBLE);
+
+            // Check if the message is an image URL
+            if (message.getText() != null && message.getText().startsWith("http")) {
+                sentViewHolder.messageText.setVisibility(View.GONE);
+                sentViewHolder.messageImage.setVisibility(View.VISIBLE);
+                Glide.with(sentViewHolder.itemView.getContext())
+                        .load(message.getText())
+                        .into(sentViewHolder.messageImage);
             } else {
-                sentViewHolder.messageTime.setVisibility(View.GONE);
+                sentViewHolder.messageText.setText(message.getText());
+                sentViewHolder.messageImage.setVisibility(View.GONE);
+                sentViewHolder.messageTime.setVisibility(View.VISIBLE);
+                if (shouldShowTimestamp) {
+                    sentViewHolder.messageTime.setText(message.getFormattedTime());
+                    sentViewHolder.messageTime.setVisibility(View.VISIBLE);
+                } else {
+                    sentViewHolder.messageTime.setVisibility(View.GONE);
+                }
             }
         } else {
             ReceivedMessageViewHolder receivedViewHolder = (ReceivedMessageViewHolder) holder;
-            receivedViewHolder.messageText.setText(message.getText());
-            if (shouldShowTimestamp) {
-                receivedViewHolder.messageTime.setText(message.getFormattedTime());
-                receivedViewHolder.messageTime.setVisibility(View.VISIBLE);
+
+            // Similar logic for received messages
+            if (message.getText() != null && message.getText().startsWith("http")) {
+                receivedViewHolder.messageText.setVisibility(View.GONE);
             } else {
-                receivedViewHolder.messageTime.setVisibility(View.GONE);
+                receivedViewHolder.messageText.setText(message.getText());
+                receivedViewHolder.messageTime.setVisibility(View.VISIBLE);
+                if (shouldShowTimestamp) {
+                    receivedViewHolder.messageTime.setText(message.getFormattedTime());
+                    receivedViewHolder.messageTime.setVisibility(View.VISIBLE);
+                } else {
+                    receivedViewHolder.messageTime.setVisibility(View.GONE);
+                }
             }
         }
     }
@@ -87,22 +109,27 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public static class SentMessageViewHolder extends RecyclerView.ViewHolder {
         TextView messageText;
         TextView messageTime;
+        ImageView messageImage;
 
         public SentMessageViewHolder(@NonNull View itemView) {
             super(itemView);
             messageText = itemView.findViewById(R.id.message_text);
             messageTime = itemView.findViewById(R.id.message_time);
+            messageImage = itemView.findViewById(R.id.message_image);
+
         }
     }
 
     public static class ReceivedMessageViewHolder extends RecyclerView.ViewHolder {
         TextView messageText;
         TextView messageTime;
+        ImageView messageImage;
 
         public ReceivedMessageViewHolder(@NonNull View itemView) {
             super(itemView);
             messageText = itemView.findViewById(R.id.message_text);
             messageTime = itemView.findViewById(R.id.message_time);
+            messageImage = itemView.findViewById(R.id.message_image);
         }
     }
 }

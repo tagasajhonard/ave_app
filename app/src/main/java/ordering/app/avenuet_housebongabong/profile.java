@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -25,6 +26,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -343,53 +345,67 @@ public class profile extends AppCompatActivity {
 
 
         String createdAt = String.valueOf(System.currentTimeMillis());
-        // Create a user object
-        User user = new User(fullName, sanitizedUsername, phoneNumber, town, barangay, street, password, createdAt);
-
-        // Save user to Firebase Realtime Database
-        databaseReference.child(sanitizedUsername).setValue(user).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Intent intent = new Intent(profile.this, login.class);
-                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("username", sanitizedUsername);
-                editor.apply();
-
-                Toast.makeText(profile.this, "Account Created Successfully!", Toast.LENGTH_SHORT).show();
-                startActivity(intent);
-                finish();
-            } else {
-                Toast.makeText(profile.this, "Failed to create account. Try again.", Toast.LENGTH_SHORT).show();
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                Log.w("FCM", "Fetching FCM registration token failed", task.getException());
+                Toast.makeText(this, "Failed to fetch FCM token. Try again.", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            // Get the FCM token
+            String fcmToken = task.getResult();
+            Log.d("FCM", "FCM Token: " + fcmToken);
+
+            // Create a user object with the FCM token
+            User user = new User(fullName, sanitizedUsername, phoneNumber, town, barangay, street, password, createdAt, fcmToken);
+
+            // Save user to Firebase Realtime Database
+            databaseReference.child(sanitizedUsername).setValue(user).addOnCompleteListener(task1 -> {
+                if (task1.isSuccessful()) {
+                    Intent intent = new Intent(profile.this, login.class);
+                    SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("username", sanitizedUsername);
+                    editor.apply();
+
+                    Toast.makeText(profile.this, "Account Created Successfully!", Toast.LENGTH_SHORT).show();
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(profile.this, "Failed to create account. Try again.", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
+//        // Create a user object
+//        User user = new User(fullName, sanitizedUsername, phoneNumber, town, barangay, street, password, createdAt);
+//
+//        // Save user to Firebase Realtime Database
+//        databaseReference.child(sanitizedUsername).setValue(user).addOnCompleteListener(task -> {
+//            if (task.isSuccessful()) {
+//                Intent intent = new Intent(profile.this, login.class);
+//                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+//                SharedPreferences.Editor editor = sharedPreferences.edit();
+//                editor.putString("username", sanitizedUsername);
+//                editor.apply();
+//
+//                Toast.makeText(profile.this, "Account Created Successfully!", Toast.LENGTH_SHORT).show();
+//                startActivity(intent);
+//                finish();
+//            } else {
+//                Toast.makeText(profile.this, "Failed to create account. Try again.", Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 
-//    public static class User {
-//        public String fullName, username, phoneNumber, town, street, sitioStreet, password;
-//
-//        public User() {
-//            // Default constructor required for calls to DataSnapshot.getValue(User.class)
-//        }
-//
-//        public User(String fullName, String username, String phoneNumber, String town, String street, String sitioStreet, String password) {
-//            this.fullName = fullName;
-//            this.username = username;
-//            this.phoneNumber = phoneNumber;
-//            this.town = town;
-//            this.street = street;
-//            this.sitioStreet = sitioStreet;
-//            this.password = password;
-//        }
-//    }
 
     public static class User {
-        public String fullName, username, phoneNumber, town, street, sitioStreet, password, createdAt;
+        public String fullName, username, phoneNumber, town, street, sitioStreet, password, createdAt, fcmToken;
 
         public User() {
             // Default constructor required for calls to DataSnapshot.getValue(User.class)
         }
 
-        public User(String fullName, String username, String phoneNumber, String town, String street, String sitioStreet, String password, String createdAt) {
+        public User(String fullName, String username, String phoneNumber, String town, String street, String sitioStreet, String password, String createdAt, String fcmToken) {
             this.fullName = fullName;
             this.username = username;
             this.phoneNumber = phoneNumber;
@@ -398,6 +414,7 @@ public class profile extends AppCompatActivity {
             this.sitioStreet = sitioStreet;
             this.password = password;
             this.createdAt = createdAt; // Set the createdAt field
+            this.fcmToken = fcmToken;
         }
     }
 

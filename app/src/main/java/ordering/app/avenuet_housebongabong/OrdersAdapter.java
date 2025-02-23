@@ -3,6 +3,7 @@ package ordering.app.avenuet_housebongabong;
 import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -49,7 +50,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
         this.orderList = orderList;
         this.fragmentType = fragmentType;
         this.rateClickListener = listener;
-
     }
 
     @NonNull
@@ -85,14 +85,8 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
 //
 //            holder.cancelOrder.setOnClickListener(v -> rateClickListener.onRateClick(item));
 
-
             String cartItemId = orderList.get(position).getCartItemId();
-
-            // Reference to the "Ratings" node in Firebase
             DatabaseReference ratingsRef = FirebaseDatabase.getInstance().getReference("Ratings").child(custname);
-
-
-            Log.e("hoyyyyyyyyyyyy", "ito yon hoyjyoyjhyohjisbkfhsd: " + cartItemId);
 
             // Check if a rating for the cartItemId already exists
             ratingsRef.orderByChild("cartItemId").equalTo(cartItemId).addValueEventListener(new ValueEventListener() {
@@ -129,7 +123,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
             holder.cancelOrder.setOnClickListener(v -> {
 
                 String orderId = orderList.get(position).getOrderId();
-//                String orderId = "Order1072";
+
                 Toast.makeText(context, "Order " + orderId + " cancelled", Toast.LENGTH_SHORT).show();
 
                 new AlertDialog.Builder(context)
@@ -205,74 +199,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
             cancelOrder = itemView.findViewById(R.id.cancelOrder);
         }
     }
-//    cancelled order but another node
-
-//    private void cancelOrder(Orders.Item item) {
-//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-//
-//        SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", MODE_PRIVATE);
-//        String custname = sharedPreferences.getString("fullName", "No name found");
-//
-//        String orderId = item.getCartItemId();
-//
-//        String cancelledTime = new SimpleDateFormat("MM/dd/yyyy, hh:mm:ss a", Locale.getDefault()).format(new Date());
-//
-//        databaseReference.child("CancelledOrders")
-//                .child(custname)
-//                .child(orderId)
-//                .setValue(item) // Save the order details
-//                .addOnSuccessListener(aVoid -> {
-//                    // Add additional details such as cancel time and reason
-//                    databaseReference.child("CancelledOrders")
-//                            .child(custname)
-//                            .child(orderId)
-//                            .child("cancelledTime")
-//                            .setValue(cancelledTime);
-//
-//                    databaseReference.child("CancelledOrders")
-//                            .child(custname)
-//                            .child(orderId)
-//                            .child("reason")
-//                            .setValue("User Cancelled");
-//
-//
-//                    Toast.makeText(context, "Order cancelled successfully", Toast.LENGTH_SHORT).show();
-//                })
-//                .addOnFailureListener(e -> {
-//                    Toast.makeText(context, "Failed to cancel order: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-//                });
-//    }
 
 
 
-//        if ("Rate".equals(fragmentType)) {
-//            holder.cancelOrder.setText("Rate");
-//            holder.cancelOrder.setVisibility(View.VISIBLE);
-//
-//            holder.cancelOrder.setOnClickListener(v -> rateClickListener.onRateClick(item));
-//
-//        } else if ("Pending".equals(fragmentType)) {
-//            holder.cancelOrder.setText("Cancel Order");
-//            holder.cancelOrder.setVisibility(View.VISIBLE);
-//
-//            holder.cancelOrder.setOnClickListener(v -> {
-//                new AlertDialog.Builder(context)
-//                        .setTitle("Cancel Order")
-//                        .setMessage("Are you sure you want to cancel this order?")
-//                        .setPositiveButton("Yes", (dialog, which) -> {
-//                            // Get the item position
-//                            holder.getAdapterPosition();
-//
-//                            int itemCount = getItemCount();
-//                            Toast.makeText(context, "Item position: " + position + " | Total items: " + itemCount, Toast.LENGTH_SHORT).show();
-//
-//
-//                        })
-//                        .setNegativeButton("No", null)
-//                        .show();
-//            });
-//
-//        } else {
-//            holder.cancelOrder.setVisibility(View.GONE);
-//        }
 }

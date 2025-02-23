@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_alignParentBottom="true"
-        android:padding="25dp"
+        android:padding="15dp"
         android:background="@drawable/detailed_prod_container">
         <LinearLayout
             android:layout_width="match_parent"
@@ -351,24 +351,13 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="7dp"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/heartshadow">
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/heart_outline"/>
-            </RelativeLayout>
+
 
             <TextView
                 android:id="@+id/addToCart"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="10dp"
                 android:background="@drawable/add_to_cart"
                 android:fontFamily="@font/herobold"
                 android:padding="10dp"

@@ -1,7 +1,9 @@
 package ordering.app.avenuet_housebongabong;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,7 +56,6 @@ public class OrderSummaryAdapter extends RecyclerView.Adapter<OrderSummaryAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         CartItem cartItem = cartItemList.get(position);
 
-
         if (cartItem != null) {
             String x = "x";
             holder.productName.setText(cartItem.getProductName());
@@ -69,6 +70,7 @@ public class OrderSummaryAdapter extends RecyclerView.Adapter<OrderSummaryAdapte
         } else {
             Log.e("OrderSummaryAdapter", "CartItem at position " + position + " is null.");
         }
+
         populateAddons(holder.addonsContainer, cartItem.getAddons());
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("UserCart").child(fullName);
