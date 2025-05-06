@@ -474,9 +474,6 @@ public class homeActivity extends AppCompatActivity implements home.OnProductCli
         tabAdapter.addFragment(new sandwich(), "Sandwich");
         tabAdapter.addFragment(new pasta(), "Pasta");
         tabAdapter.addFragment(new pizza(), "Pizza");
-        tabAdapter.addFragment(new mozzarella(), "Mozzarella");
-        tabAdapter.addFragment(new fries(), "Fries");
-        tabAdapter.addFragment(new cheese_sticks(), "Chesse Sticks");
 
         viewPager.setAdapter(tabAdapter);
 
