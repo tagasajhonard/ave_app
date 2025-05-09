@@ -64,6 +64,8 @@ public class purchase extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_purchase);
 
+        String orderId = getIntent().getStringExtra("orderId");
+
         showMoreButton = findViewById(R.id.show_more_button);
         hideButton = findViewById(R.id.hide_button);
 
@@ -103,7 +105,10 @@ public class purchase extends AppCompatActivity {
         String fullName = sharedPreferences.getString("fullName", "User");
 //        String savedUsername = sharedPreferences.getString("username", "");
 
-        getOrderFromFirebase(fullName);
+//        getOrderFromFirebase(fullName);
+
+        getOrderFromFirebase(fullName, orderId);
+
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -130,6 +135,9 @@ public class purchase extends AppCompatActivity {
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this);
         viewPager.setAdapter(viewPagerAdapter);
 
+        int fragmentIndex = getIntent().getIntExtra("fragmentIndex", 0);
+        viewPager.setCurrentItem(fragmentIndex);
+
         handler = new Handler();
 
 
@@ -149,62 +157,48 @@ public class purchase extends AppCompatActivity {
                         break;
                     case 2:
                         tab.setText("To Receive");
-                        tab.setIcon(R.drawable.toreceived); // Set your custom open box icon
+                        tab.setIcon(R.drawable.fast); // Set your custom open box icon
                         break;
                     case 3:
                         tab.setText("Completed");
                         tab.setIcon(R.drawable.torate); // Set your custom checkmark icon
                         break;
-                    case 4:
-                        tab.setText("Cancelled");
-                        tab.setIcon(R.drawable.cancelled); // Set your custom checkmark icon
-                        break;
+
                 }
             }
         }).attach();
     }
 
 
+    private void getOrderFromFirebase(String userId, String orderId) {
+        DatabaseReference orderRef = FirebaseDatabase.getInstance().getReference("Orders")
+                .child(userId).child(orderId); // now fetching specific orderId only
 
-    private void getOrderFromFirebase(String userId) {
-        DatabaseReference ordersRef = FirebaseDatabase.getInstance().getReference("Orders").child(userId);
-        ordersRef.addValueEventListener(new ValueEventListener() {
+        orderRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                List<TrackingStep> allSteps = new ArrayList<>(); // Hold all tracking steps
+                List<TrackingStep> trackingSteps = new ArrayList<>();
 
-                for (DataSnapshot orderSnapshot : dataSnapshot.getChildren()) {
-                    Orders order = orderSnapshot.getValue(Orders.class);
-                    if (order != null) {
-                        // Generate tracking steps for each order
-                        acceptedTime = order.getAcceptedTime();
-                        orderTime = order.getOrderTime();
-                        shipTime = order.getShipTime();
-                        receivedTime = order.getReceivedTime();
+                Orders order = dataSnapshot.getValue(Orders.class);
+                if (order != null) {
+                    acceptedTime = order.getAcceptedTime();
+                    orderTime = order.getOrderTime();
+                    shipTime = order.getShipTime();
+                    receivedTime = order.getReceivedTime();
 
-                        List<TrackingStep> trackingSteps = generateTrackingSteps(order, orderTime ,acceptedTime,shipTime,receivedTime);
-                        allSteps.addAll(trackingSteps); // Combine all steps from different orders
-                    }
+                    trackingSteps = generateTrackingSteps(order, orderTime, acceptedTime, shipTime, receivedTime);
                 }
 
-                // Update adapter with all combined tracking steps
-                adapter = new OrderTrackingAdapter(allSteps);
+                adapter = new OrderTrackingAdapter(trackingSteps);
                 recyclerView.setAdapter(adapter);
 
-                if (allSteps.isEmpty()) {
-                    recyclerView.setVisibility(View.GONE); // Hide RecyclerView
+                recyclerView.setVisibility(trackingSteps.isEmpty() ? View.GONE : View.VISIBLE);
+                if (trackingSteps.size() <= 2) {
+                    showMoreButton.setVisibility(View.GONE);
+                    hideButton.setVisibility(View.GONE);
                 } else {
-                    recyclerView.setVisibility(View.VISIBLE); // Show RecyclerView
+                    showMoreButton.setVisibility(View.VISIBLE);
                 }
-
-                if (allSteps.size() <= 2) {
-                    showMoreButton.setVisibility(View.GONE); // Hide "Show More" button if 2 or fewer steps
-                    hideButton.setVisibility(View.GONE);     // Hide "Hide" button if 2 or fewer steps
-                } else {
-                    showMoreButton.setVisibility(View.VISIBLE); // Show "Show More" button if there are 3 or more steps
-                }
-
-
             }
 
             @Override
@@ -213,6 +207,7 @@ public class purchase extends AppCompatActivity {
             }
         });
     }
+
 
     public List<TrackingStep> generateTrackingSteps(Orders order, String orderTime, String acceptedTime, String shipTime, String receivedTime) {
         List<TrackingStep> trackingSteps = new ArrayList<>();
@@ -271,8 +266,6 @@ public class purchase extends AppCompatActivity {
                     return new to_receive();
                 case 3:
                     return new to_rate();
-                case 4:
-                    return new cancelled();
                 default:
                     return new pending();
             }
@@ -280,7 +273,9 @@ public class purchase extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return 5; // Number of tabs
+            return 4; // Number of tabs
         }
     }
+
+
 }

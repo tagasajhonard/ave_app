@@ -120,6 +120,20 @@
         android:textAlignment="center"
         android:fontFamily="@font/herobold"
         />
+
+        <TextView
+            android:id="@+id/forgot"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textSize="15dp"
+            android:text="Forgot Password?"
+            android:textAlignment="center"
+            android:fontFamily="@font/herobold"
+            />
+
+
     </LinearLayout>
     </androidx.cardview.widget.CardView>
     <View

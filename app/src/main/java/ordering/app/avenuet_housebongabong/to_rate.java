@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -88,8 +89,9 @@ public class to_rate extends Fragment {
         fetchOrdersFromFirebase();
 
         return view;
-    }
 
+
+    }
 
 
     private void showRatingDialog(Orders.Item item) {
@@ -178,64 +180,86 @@ public class to_rate extends Fragment {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         String custname = sharedPreferences.getString("fullName", "No name found");
 
-        // Get reference to 'Orders' node in Firebase
         ordersRef = FirebaseDatabase.getInstance().getReference("Orders");
-
-        ordersRef.child(custname).addValueEventListener(new ValueEventListener() {
+        ordersRef.child(custname).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                orderList.clear(); // Clear previous data
+                orderList.clear();
 
-                for (DataSnapshot orderSnapshot : snapshot.getChildren()) {
-                    Orders order = orderSnapshot.getValue(Orders.class);
-                    if (order != null && "delivered".equals(order.getStatus())) {
-                        List<Orders.Item> items = order.getItems();
-                        if (items != null) {
-                            for (DataSnapshot cartItemSnapshot : orderSnapshot.child("items").getChildren()) {
-                                Orders.Item cartItem = cartItemSnapshot.getValue(Orders.Item.class);
+                // Fetch rated cartItemIds first
+                DatabaseReference ratingsRef = FirebaseDatabase.getInstance()
+                        .getReference("Ratings")
+                        .child(custname);
 
-                                cartItem.clearAddons();
+                ratingsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot ratingSnapshot) {
+                        Set<String> ratedIds = new HashSet<>();
+                        for (DataSnapshot snap : ratingSnapshot.getChildren()) {
+                            String id = snap.child("cartItemId").getValue(String.class);
+                            if (id != null) ratedIds.add(id);
+                        }
 
-                                if (cartItemSnapshot.hasChild("addons")) {
+                        for (DataSnapshot orderSnapshot : snapshot.getChildren()) {
+                            Orders order = orderSnapshot.getValue(Orders.class);
+                            if (order != null && "delivered".equals(order.getStatus())) {
+                                for (DataSnapshot cartItemSnapshot : orderSnapshot.child("items").getChildren()) {
+                                    Orders.Item cartItem = cartItemSnapshot.getValue(Orders.Item.class);
+                                    if (cartItem != null) {
+                                        cartItem.clearAddons();
 
-                                    for (DataSnapshot addonSnapshot : cartItemSnapshot.child("addons").getChildren()) {
-                                        String addonName = addonSnapshot.child("name").getValue(String.class);
-                                        String addonImageUrl = addonSnapshot.child("imageUrl").getValue(String.class);
-                                        double addonPrice = addonSnapshot.child("price").getValue(Double.class);
-                                        int addonQuantity = addonSnapshot.child("quantity").getValue(Integer.class);
+                                        if (cartItemSnapshot.hasChild("addons")) {
+                                            for (DataSnapshot addonSnapshot : cartItemSnapshot.child("addons").getChildren()) {
+                                                String addonName = addonSnapshot.child("name").getValue(String.class);
+                                                String addonImageUrl = addonSnapshot.child("imageUrl").getValue(String.class);
+                                                double addonPrice = addonSnapshot.child("price").getValue(Double.class);
+                                                int addonQuantity = addonSnapshot.child("quantity").getValue(Integer.class);
 
-                                        AddonItem addonItem = new AddonItem(addonName, addonImageUrl, addonPrice);
-                                        addonItem.setSelectedQuantity(addonQuantity);
-                                        cartItem.addAddon(addonItem);  // Assuming addAddon() method exists in Orders.Item
+                                                AddonItem addonItem = new AddonItem(addonName, addonImageUrl, addonPrice);
+                                                addonItem.setSelectedQuantity(addonQuantity);
+                                                cartItem.addAddon(addonItem);
+                                            }
+                                        }
+
+                                        // Set rated status
+                                        boolean isRated = ratedIds.contains(cartItem.getCartItemId());
+                                        cartItem.setRated(isRated);
+                                        orderList.add(cartItem);
                                     }
-                                } else {
-
                                 }
-                                orderList.add(cartItem);
                             }
                         }
+
+
+                        // Sort: unrated first
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            orderList.sort((item1, item2) -> Boolean.compare(item1.isRated(), item2.isRated()));
+                        }
+
+                        adapter.notifyDataSetChanged();
+
+                        if (orderList.isEmpty()) {
+                            recyclerHold.setVisibility(View.GONE);
+                            noOrdersLayout.setVisibility(View.VISIBLE);
+                        } else {
+                            recyclerHold.setVisibility(View.VISIBLE);
+                            noOrdersLayout.setVisibility(View.GONE);
+                        }
                     }
-                }
 
-                // Notify adapter about data changes
-
-                adapter.notifyDataSetChanged();
-
-                if (orderList.isEmpty()) {
-                    recyclerHold.setVisibility(View.GONE);
-                    noOrdersLayout.setVisibility(View.VISIBLE);
-                } else {
-                    recyclerHold.setVisibility(View.VISIBLE);
-                    noOrdersLayout.setVisibility(View.GONE);
-                }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e("RatingsError", "onCancelled: " + error.getMessage());
+                    }
+                });
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // Handle error
-                Log.e("DatabaseError", "onCancelled: " + error.getMessage());
+                Log.e("OrdersError", "onCancelled: " + error.getMessage());
             }
         });
+
 
     }
 

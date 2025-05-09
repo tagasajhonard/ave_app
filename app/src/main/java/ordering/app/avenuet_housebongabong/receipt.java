@@ -172,7 +172,7 @@ public class receipt extends AppCompatActivity {
             fos.close();
 
             Toast.makeText(this, "Receipt saved successfully!", Toast.LENGTH_SHORT).show();
-            Intent intents = new Intent(receipt.this, purchase.class);
+            Intent intents = new Intent(receipt.this, OrdersListActivity.class);
             startActivity(intents);
             finish();
         } catch (Exception e) {

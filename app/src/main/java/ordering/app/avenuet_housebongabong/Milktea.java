@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 public class Milktea extends Fragment {
@@ -99,7 +101,9 @@ public class Milktea extends Fragment {
         return rootView;
     }
 
-@Override
+
+
+    @Override
 public void onStart() {
     super.onStart();
     adapter.startListening();
@@ -139,9 +143,11 @@ public void onStart() {
     public class ProductViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView productImage;
-        private TextView productName ,price ;
+        private TextView productName, price, ratingTextView;
+        private RatingBar ratingBar;
         private ImageView heartImageView;
         private FrameLayout overlayImage;
+
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
             productImage = itemView.findViewById(R.id.productImage);
@@ -150,6 +156,7 @@ public void onStart() {
             heartImageView = itemView.findViewById(R.id.heartImageView);
             overlayImage = itemView.findViewById(R.id.overlayImage);
         }
+
 
         // Method to set product details to the views
         public void setProductDetails(Product product) {

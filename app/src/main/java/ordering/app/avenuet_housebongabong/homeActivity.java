@@ -110,6 +110,16 @@ public class homeActivity extends AppCompatActivity implements home.OnProductCli
             return insets;
         });
 
+        TextView contactUs = findViewById(R.id.contactUs);
+
+        contactUs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(homeActivity.this, ContactUsActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
@@ -220,7 +230,7 @@ public class homeActivity extends AppCompatActivity implements home.OnProductCli
         purchase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(homeActivity.this, purchase.class);
+                Intent intent = new Intent(homeActivity.this, OrdersListActivity.class);
                 startActivity(intent);
             }
         });

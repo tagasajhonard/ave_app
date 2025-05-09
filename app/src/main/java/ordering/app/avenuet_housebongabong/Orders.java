@@ -31,6 +31,7 @@ public class Orders {
 
 
 
+
     public String getOrderId() {
         return orderId;
     }
@@ -236,6 +237,12 @@ public class Orders {
             }
             return addonsString.toString();
         }
+
+        private boolean rated;
+        public boolean isRated() { return rated; }
+        public void setRated(boolean rated) { this.rated = rated; }
+
+
 
     }
 }

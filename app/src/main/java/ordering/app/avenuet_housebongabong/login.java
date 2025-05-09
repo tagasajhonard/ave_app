@@ -5,6 +5,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+
+
+import android.hardware.biometrics.BiometricManager;
+import android.hardware.biometrics.BiometricPrompt;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -25,6 +29,8 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -39,12 +45,16 @@ import com.google.firebase.database.ValueEventListener;
 public class login extends AppCompatActivity {
     private EditText usernameEditText;
     private EditText passwordEditText;
-    private TextView confirmButton;
+    private TextView confirmButton, forgot;
     private TextView signin;
     private DatabaseReference databaseReference;
     private View popupView;
+    private Button fastLoginButton;
 
-    @SuppressLint("MissingInflatedId")
+
+
+
+    @SuppressLint({"MissingInflatedId", "WrongViewCast"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +71,15 @@ public class login extends AppCompatActivity {
         usernameEditText = findViewById(R.id.txtUsername);
         passwordEditText = findViewById(R.id.txtPass);
         confirmButton = findViewById(R.id.confirm);
+        forgot = findViewById(R.id.forgot);
 
+        forgot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(login.this,ForgotPasswordActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
         signin.setOnClickListener(new View.OnClickListener() {
@@ -93,6 +111,7 @@ public class login extends AppCompatActivity {
                 }
             }
         });
+
 
     }
     private void validateLogin(final String username, final String password) {

@@ -80,15 +80,8 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
             SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", MODE_PRIVATE);
             String custname = sharedPreferences.getString("fullName", "No name found");
 
-//            holder.cancelOrder.setText("Rate");
-//            holder.cancelOrder.setVisibility(View.VISIBLE);
-//
-//            holder.cancelOrder.setOnClickListener(v -> rateClickListener.onRateClick(item));
-
             String cartItemId = orderList.get(position).getCartItemId();
             DatabaseReference ratingsRef = FirebaseDatabase.getInstance().getReference("Ratings").child(custname);
-
-            // Check if a rating for the cartItemId already exists
             ratingsRef.orderByChild("cartItemId").equalTo(cartItemId).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {

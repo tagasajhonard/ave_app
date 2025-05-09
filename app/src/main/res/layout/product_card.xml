@@ -102,13 +102,14 @@
                         android:id="@+id/prodPrice"
                         android:gravity="center_vertical"
                         android:textSize="15dp"
-
                         android:padding="10dp"
                         android:fontFamily="@font/herobold"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:textColor="@color/white"
                         />
+
+
 
 
                 </LinearLayout>

@@ -3,34 +3,30 @@ package ordering.app.avenuet_housebongabong;
 public class Product {
     private String Category;
     private String ImageURL;
-
     private String QRImageURL;
-
     private String Large;
     private String ProductName;
-
-
     private String Regular;
     private String Small;
-
-
     private String productNameLower;
-
     private String Description;
-
     private boolean isLiked;
-
     private String productKey;
-
     private String status;
     private boolean bestSeller;
+
+
+    private int tasteRating;
+    private int qualityRating;
+    private int serviceRating;
+    private int deliveryRating;
 
     // Default constructor (required by Firebase)
     public Product() {
     }
 
     // Constructor with parameters
-    public Product(String category, String imageURL, String qrImage, String large, String productName, String regular, String small, String description, String productNameLower, String status, boolean bestSeller) {
+    public Product(String category, String imageURL, String qrImage, String large, String productName, String regular, String small, String description, String productNameLower, String status, boolean bestSeller, int tasteRating, int qualityRating, int serviceRating, int deliveryRating) {
         this.Category = category;
         this.ImageURL = imageURL;
         this.QRImageURL = qrImage;
@@ -43,7 +39,44 @@ public class Product {
         this.productNameLower = productName.toLowerCase();
         this.status  = status;
         this.bestSeller = bestSeller;
+        this.tasteRating = tasteRating;
+        this.qualityRating = qualityRating;
+        this.serviceRating = serviceRating;
+        this.deliveryRating = deliveryRating;
     }
+
+    public int getTasteRating() {
+        return tasteRating;
+    }
+
+    public void setTasteRating(int tasteRating) {
+        this.tasteRating = tasteRating;
+    }
+
+    public int getQualityRating() {
+        return qualityRating;
+    }
+
+    public void setQualityRating(int qualityRating) {
+        this.qualityRating = qualityRating;
+    }
+
+    public int getServiceRating() {
+        return serviceRating;
+    }
+
+    public void setServiceRating(int serviceRating) {
+        this.serviceRating = serviceRating;
+    }
+
+    public int getDeliveryRating() {
+        return deliveryRating;
+    }
+
+    public void setDeliveryRating(int deliveryRating) {
+        this.deliveryRating = deliveryRating;
+    }
+
     public boolean isLiked() {
         return isLiked;
     }
@@ -149,5 +182,6 @@ public class Product {
     public void setStatus(String status) {
         this.status = status;
     }
+
 
 }

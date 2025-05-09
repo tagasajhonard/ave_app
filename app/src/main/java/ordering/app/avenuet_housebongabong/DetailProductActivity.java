@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -319,9 +320,6 @@ public class DetailProductActivity extends AppCompatActivity {
         });
 
 
-
-
-
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
                     @Override
@@ -342,6 +340,10 @@ public class DetailProductActivity extends AppCompatActivity {
         cupSmall = findViewById(R.id.cupSmall);
         showPrice = findViewById(R.id.showPrice);
 
+        LinearLayout addOnsField, sugarlvl;
+        addOnsField = findViewById(R.id.addOnsField);
+        sugarlvl = findViewById(R.id.sugarlvl);
+
         cartBtn = findViewById(R.id.addToCart);
 
         largePrice = getIntent().getStringExtra("productLargePrice");
@@ -356,33 +358,100 @@ public class DetailProductActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
+
                         for (DataSnapshot productSnapshot : snapshot.getChildren()) {
+                            String regularPrice = productSnapshot.child("Regular").getValue(String.class);
                             largePrice = productSnapshot.child("Large").getValue(String.class);
                             smallPrice = productSnapshot.child("Small").getValue(String.class);
 
-                            if ("large".equalsIgnoreCase(itemSize)) {
-                                cupLarge.setBackgroundResource(R.drawable.cuplfill);
-                                cupSmall.setBackgroundResource(R.drawable.cups_gray);
-                                NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("en", "PH"));
-                                String formattedLargePrice = formatter.format(Double.parseDouble(largePrice));
-                                isCupLargeFilled = true;
-                                isCupSmallFilled = false;
-                                showPrice.setText(formattedLargePrice);
-                            } else if ("small".equalsIgnoreCase(itemSize)) {
-                                cupSmall.setBackgroundResource(R.drawable.cupsfill);
-                                cupLarge.setBackgroundResource(R.drawable.cupl_gray);
-                                NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("en", "PH"));
-                                String formattedSmallPrice = formatter.format(Double.parseDouble(smallPrice));
-                                isCupSmallFilled = true;
-                                isCupLargeFilled = false;
-                                showPrice.setText(formattedSmallPrice);
+                            String category = productSnapshot.child("Category").getValue(String.class);
+
+                            if ("Egg Drop Sandwich".equalsIgnoreCase(category) || "Pasta".equalsIgnoreCase(category) || "Pizza".equalsIgnoreCase(category)) {
+                                // Hide sugar level and add-ons fields
+                                sugarlvl.setVisibility(View.GONE);  // Assuming you have the sugarLevel View
+                                addOnsField.setVisibility(View.GONE);      // Assuming you have the addOns View
                             } else {
-                                // If product name does not specify size, clear the price
-                                cupLarge.setBackgroundResource(R.drawable.cupl_gray);  // Unfill large cup
-                                cupSmall.setBackgroundResource(R.drawable.cups_gray);  // Unfill small cup
-                                showPrice.setText("");  // Clear price if no size is found
+                                // Show sugar level and add-ons fields
+                                sugarlvl.setVisibility(View.VISIBLE);
+                                addOnsField.setVisibility(View.VISIBLE);
+                            }
+
+
+                            // Check if product only has "Regular" size (no Large or Small)
+                            if (regularPrice != null && largePrice == null && smallPrice == null) {
+                                // Use small cup as "Regular"
+                                cupLarge.setVisibility(View.GONE); // Hide large cup
+                                cupSmall.setBackgroundResource(R.drawable.cupsfill);
+                                NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("en", "PH"));
+                                String formattedRegularPrice = formatter.format(Double.parseDouble(regularPrice));
+                                showPrice.setText(formattedRegularPrice);
+                                isCupLargeFilled = false;
+                                isCupSmallFilled = true;
+
+                                // Disable clicks (optional)
+                                cupLarge.setOnClickListener(null);
+                                cupSmall.setOnClickListener(null);
+
+                            } else {
+                                // Show both cups
+                                cupLarge.setVisibility(View.VISIBLE);
+                                cupSmall.setVisibility(View.VISIBLE);
+
+                                if ("large".equalsIgnoreCase(itemSize)) {
+                                    cupLarge.setBackgroundResource(R.drawable.cuplfill);
+                                    cupSmall.setBackgroundResource(R.drawable.cups_gray);
+                                    NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("en", "PH"));
+                                    String formattedLargePrice = formatter.format(Double.parseDouble(largePrice));
+                                    isCupLargeFilled = true;
+                                    isCupSmallFilled = false;
+                                    showPrice.setText(formattedLargePrice);
+                                } else if ("small".equalsIgnoreCase(itemSize)) {
+                                    cupSmall.setBackgroundResource(R.drawable.cupsfill);
+                                    cupLarge.setBackgroundResource(R.drawable.cupl_gray);
+                                    NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("en", "PH"));
+                                    String formattedSmallPrice = formatter.format(Double.parseDouble(smallPrice));
+                                    isCupSmallFilled = true;
+                                    isCupLargeFilled = false;
+                                    showPrice.setText(formattedSmallPrice);
+                                } else {
+                                    cupLarge.setBackgroundResource(R.drawable.cupl_gray);
+                                    cupSmall.setBackgroundResource(R.drawable.cups_gray);
+                                    showPrice.setText("");
+                                }
+
+                                // Set cup click listeners
+                                cupLarge.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        cupLarge.setBackgroundResource(R.drawable.cuplfill);
+                                        cupSmall.setBackgroundResource(R.drawable.cups_gray);
+                                        if (largePrice != null) {
+                                            NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("en", "PH"));
+                                            String formattedLargePrice = formatter.format(Double.parseDouble(largePrice));
+                                            showPrice.setText(formattedLargePrice);
+                                            isCupLargeFilled = true;
+                                            isCupSmallFilled = false;
+                                        }
+                                    }
+                                });
+
+                                cupSmall.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        cupSmall.setBackgroundResource(R.drawable.cupsfill);
+                                        cupLarge.setBackgroundResource(R.drawable.cupl_gray);
+                                        if (smallPrice != null) {
+                                            NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("en", "PH"));
+                                            String formattedSmallPrice = formatter.format(Double.parseDouble(smallPrice));
+                                            showPrice.setText(formattedSmallPrice);
+                                            isCupSmallFilled = true;
+                                            isCupLargeFilled = false;
+                                        }
+                                    }
+                                });
                             }
                         }
+
 
                         // Set OnClickListener for cup sizes after retrieving prices
                         cupLarge.setOnClickListener(new View.OnClickListener() {
@@ -638,106 +707,6 @@ public class DetailProductActivity extends AppCompatActivity {
     }
 
 
-//    private void saveToFirebase(String productName, int quantity, String productPrice, String size) {
-//        // Get shared preferences
-//        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-//        String fullName = sharedPreferences.getString("fullName", "No name found");
-//        String imageUrl = getIntent().getStringExtra("productImageURL");
-//
-//
-//        // Reference to the user's cart
-//        DatabaseReference userCartRef = mDatabase.child("UserCart").child(fullName);
-//
-//        // Check if the item already exists in the cart
-//        userCartRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                boolean itemExists = false;
-//                String existingCartItemId = null;
-//                int existingQuantity = 0;
-//
-//                // Iterate through cart items to find matching product and size
-//                for (DataSnapshot cartItemSnapshot : dataSnapshot.getChildren()) {
-//                    String existingProductName = cartItemSnapshot.child("productName").getValue(String.class);
-//                    String existingSize = cartItemSnapshot.child("size").getValue(String.class);
-//                    if (productName.equals(existingProductName) && size.equals(existingSize)) {
-//                        itemExists = true;
-//                        existingCartItemId = cartItemSnapshot.getKey();
-//                        existingQuantity = cartItemSnapshot.child("quantity").getValue(Integer.class);
-//                        break;
-//                    }
-//                }
-//
-//                if (itemExists) {
-//                    // Update the quantity of the existing cart item
-//                    int newQuantity = existingQuantity + quantity;
-//                    userCartRef.child(existingCartItemId).child("quantity").setValue(newQuantity)
-//                            .addOnCompleteListener(task -> {
-//                                if (task.isSuccessful()) {
-//                                    MotionToast.Companion.createColorToast(DetailProductActivity.this,
-//                                            "Hurray success 😍",
-//                                            "Cart updated!",
-//                                            MotionToastStyle.SUCCESS,
-//                                            MotionToast.GRAVITY_BOTTOM,
-//                                            MotionToast.LONG_DURATION,
-//                                            ResourcesCompat.getFont(DetailProductActivity.this,R.font.herobold));
-//                                } else {
-//                                    MotionToast.Companion.createColorToast(DetailProductActivity.this,
-//                                            "Failed ☹️",
-//                                            "Updating product failed!",
-//                                            MotionToastStyle.ERROR,
-//                                            MotionToast.GRAVITY_BOTTOM,
-//                                            MotionToast.LONG_DURATION,
-//                                            ResourcesCompat.getFont(DetailProductActivity.this,R.font.herobold));
-//                                }
-//                            });
-//                } else {
-//                    // Add a new cart item
-//                    String cartItemId = userCartRef.push().getKey();
-//
-//
-//                    // Create a map to hold the product details
-//                    Map<String, Object> cartItem = new HashMap<>();
-//                    cartItem.put("productImageUrl", imageUrl);
-//                    cartItem.put("productName", productName);
-//                    cartItem.put("quantity", quantity);
-//                    cartItem.put("productPrice", productPrice);
-//                    cartItem.put("size", size);
-//                    cartItem.put("sugarLevel", sugarLevel);
-//
-//                    // Save the cart item to Firebase
-//                    userCartRef.child(cartItemId).setValue(cartItem)
-//                            .addOnCompleteListener(task -> {
-//                                if (task.isSuccessful()) {
-//                                    MotionToast.Companion.createColorToast(DetailProductActivity.this,
-//                                            "Hurray success 😍",
-//                                            "Added to Cart!",
-//                                            MotionToastStyle.SUCCESS,
-//                                            MotionToast.GRAVITY_BOTTOM,
-//                                            MotionToast.LONG_DURATION,
-//                                            ResourcesCompat.getFont(DetailProductActivity.this,R.font.herobold));
-//                                } else {
-//                                    MotionToast.Companion.createColorToast(DetailProductActivity.this,
-//                                            "Failed ☹️",
-//                                            "Adding product failed!",
-//                                            MotionToastStyle.ERROR,
-//                                            MotionToast.GRAVITY_BOTTOM,
-//                                            MotionToast.LONG_DURATION,
-//                                            ResourcesCompat.getFont(DetailProductActivity.this,R.font.herobold));
-//                                }
-//                            });
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                // Handle database error
-//                Toast.makeText(DetailProductActivity.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-
-
     private void saveToFirebase(String productName, int quantity, String productPrice, String size, List<AddonItem> addonsList) {
         // Get shared preferences
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
@@ -850,35 +819,6 @@ public class DetailProductActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
-    private void updateCartWithAddons(String cartItemId, List<AddonItem> addonsList) {
-        for (AddonItem addon : addonsList) {
-            if (addon.getSelectedQuantity() > 0) { // Ensure we have selected quantity
-                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                String fullName = sharedPreferences.getString("fullName", "No name found");
-                DatabaseReference addonRef = mDatabase.child("UserCart").child(fullName).child(cartItemId).child("addons").push();
-
-                Map<String, Object> addonMap = new HashMap<>();
-                addonMap.put("addonName", addon.getName());
-                addonMap.put("addonQuantity", addon.getSelectedQuantity());
-                addonMap.put("addonPrice", addon.getRegular());
-
-                // Save each add-on to Firebase with error checking
-                addonRef.setValue(addonMap).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Log.d("AddonSuccess", "Successfully added addon: " + addon.getName());
-                    } else {
-                        Log.e("AddonError", "Failed to add addon: " + addon.getName());
-                    }
-                });
-            } else {
-                Log.d("AddonQuantity", "Addon: " + addon.getName() + " not added due to zero quantity.");
-            }
-        }
-    }
-
 
     @Override
     public void onBackPressed() {

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/light_gray"
+    android:fitsSystemWindows="true"
+    tools:context=".OrdersListActivity">
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:background="@drawable/topbg"
+        android:layout_height="150dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="My Purchases"
+            android:layout_gravity="bottom"
+            android:textColor="@color/white"
+            android:fontFamily="@font/herobold"
+            android:textSize="20sp"
+            android:padding="10sp"/>
+
+    </FrameLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Current Orders"
+                android:textSize="18sp"
+                android:fontFamily="@font/herobold"
+                android:background="@color/white"
+                android:layout_marginTop="10dp"
+                android:padding="10dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/currentOrdersRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:nestedScrollingEnabled="false"
+                android:background="@color/white"
+                android:fontFamily="@font/heroregular" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Past Orders"
+                android:textSize="18sp"
+                android:fontFamily="@font/herobold"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                android:background="@color/white" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/pastOrdersRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:nestedScrollingEnabled="false"
+                android:background="@color/white"
+                android:fontFamily="@font/heroregular"
+                android:padding="10dp"/>
+        </LinearLayout>
+
+
+
+</LinearLayout>
