@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/light_gray"
+    android:fitsSystemWindows="true"
+    tools:context=".OrdersListActivity">
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:background="@drawable/topbg"
+        android:layout_height="150dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="My Purchases"
+            android:layout_gravity="bottom"
+            android:textColor="@color/white"
+            android:fontFamily="@font/herobold"
+            android:textSize="20sp"
+            android:padding="10sp"/>
+
+    </FrameLayout>
+
+    <com.google.android.material.tabs.TabLayout
+        app:tabTextAppearance="@style/CustomTabTextAppearance"
+        android:id="@+id/OrderTab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabIndicatorColor="@color/brown"
+        app:tabSelectedTextColor="@color/brown"
+        android:layout_marginTop="8dp"
+        app:tabIconTint="@color/tab_icon_color"
+        app:tabTextColor="@android:color/black" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/ViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+
+
+
+</LinearLayout>

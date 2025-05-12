@@ -1,0 +1,8 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:gravity="center">
+        <shape android:shape="rectangle">
+            <size android:height="2dp" />
+            <solid android:color="#8B4513" /> <!-- Set color to brown (#8B4513) -->
+        </shape>
+    </item>
+</layer-list>

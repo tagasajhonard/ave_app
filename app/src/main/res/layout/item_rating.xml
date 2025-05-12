@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="8dp"
+        android:layout_margin="15dp"
+        android:background="@android:color/white">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:orientation="vertical">
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/product_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/herobold"
+                    android:textSize="20sp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:id="@+id/timestamp"
+                    android:fontFamily="@font/herobold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/delivery_rating_label"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/heroregular"
+                    android:gravity="center_vertical"
+                    android:text="Delivery"
+                    android:textSize="15dp" />
+
+                <ProgressBar
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:id="@+id/delivery_progress_bar"
+                    android:layout_width="0dp"
+                    android:progressDrawable="@drawable/progress_bar_custom"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="10dp"
+                    android:max="5"
+                    android:progress="0" />
+
+                <TextView
+                    android:id="@+id/delivery_rating_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:fontFamily="@font/herobold"
+                    android:textSize="20dp"
+                    android:text="0" />
+            </LinearLayout>
+
+
+            <!-- Quality Rating -->
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/quality_rating_label"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:fontFamily="@font/heroregular"
+                    android:textSize="15dp"
+                    android:text="Quality" />
+
+                <ProgressBar
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:id="@+id/quality_progress_bar"
+                    android:layout_width="0dp"
+                    android:progressDrawable="@drawable/progress_bar_custom"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="10dp"
+                    android:max="5"
+                    android:progress="0" />
+
+                <TextView
+                    android:id="@+id/quality_rating_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:fontFamily="@font/herobold"
+                    android:textSize="20dp"
+                    android:text="0" />
+
+            </LinearLayout>
+
+
+            <!-- Taste Rating -->
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/taste_rating_label"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/heroregular"
+                    android:gravity="center_vertical"
+                    android:text="Taste"
+                    android:textSize="15dp" />
+
+                <ProgressBar
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:id="@+id/taste_progress_bar"
+                    android:layout_width="0dp"
+                    android:progressDrawable="@drawable/progress_bar_custom"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="10dp"
+                    android:max="5"
+                    android:progress="0" />
+
+                <TextView
+                    android:id="@+id/taste_rating_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:fontFamily="@font/herobold"
+                    android:textSize="20dp"
+                    android:text="0" />
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/service_rating_label"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:fontFamily="@font/heroregular"
+                    android:text="Service"
+                    android:textSize="15dp" />
+
+                <ProgressBar
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:id="@+id/service_progress_bar"
+                    android:progressDrawable="@drawable/progress_bar_custom"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="10dp"
+                    android:max="5"
+                    android:progress="0" />
+
+                <TextView
+                    android:id="@+id/service_rating_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:fontFamily="@font/herobold"
+                    android:textSize="20dp"
+                    android:text="0" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:text="Feedbacks"
+                android:fontFamily="@font/herobold"
+                android:textSize="20dp"/>
+
+            <TextView
+                android:id="@+id/feedback"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/heroregular"
+                android:textSize="13dp" />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+</LinearLayout>

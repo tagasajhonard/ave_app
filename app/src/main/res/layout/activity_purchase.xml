@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/light_gray"
+    android:fitsSystemWindows="true"
+    tools:context=".purchase">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/herobold"
+                    android:background="@color/topbrown"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:padding="16dp"
+                    android:textSize="17dp"
+                    android:text="Your Order Status"
+                    android:textAlignment="center"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:nestedScrollingEnabled="false"
+                    android:id="@+id/recycler_view_tracking"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:padding="16dp" />
+
+                <Button
+                    android:id="@+id/show_more_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Show More"
+                    android:layout_gravity="end"
+                    android:layout_margin="10dp"
+                    android:textAllCaps="false"
+                    android:padding="10dp"
+                    android:backgroundTint="@color/topbrown" />
+
+                <Button
+                    android:id="@+id/hide_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hide"
+                    android:layout_gravity="end"
+                    android:layout_margin="10dp"
+                    android:textAllCaps="false"
+                    android:padding="10dp"
+                    android:backgroundTint="@color/topbrown"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <com.google.android.material.tabs.TabLayout
+                app:tabTextAppearance="@style/CustomTabTextAppearance"
+                android:id="@+id/tabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                app:tabIndicatorColor="@color/brown"
+                app:tabSelectedTextColor="@color/brown"
+                android:layout_marginTop="8dp"
+                app:tabIconTint="@color/tab_icon_color"
+                app:tabTextColor="@android:color/black" />
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+
+</ScrollView>

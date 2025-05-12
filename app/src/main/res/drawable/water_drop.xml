@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Solid color -->
+    <solid android:color="#8B4513" /> <!-- Color code -->
+
+    <!-- Rounded corners -->
+    <corners
+        android:topLeftRadius="50sp"
+        android:topRightRadius="50sp"
+        android:bottomRightRadius="0sp"
+        android:bottomLeftRadius="50dp" />
+</shape>
+
