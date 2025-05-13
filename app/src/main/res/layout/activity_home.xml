@@ -397,35 +397,7 @@
                             android:text="- Ratings"/>
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_marginTop="20dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
 
-                        <TextView
-                            android:layout_marginStart="50dp"
-                            android:textSize="18dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/herobold"
-                            android:text="- Suggestion"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_marginTop="20dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_marginStart="50dp"
-                            android:textSize="18dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/herobold"
-                            android:text="- Report a Problem"/>
-                    </LinearLayout>
 
 
                 </LinearLayout>

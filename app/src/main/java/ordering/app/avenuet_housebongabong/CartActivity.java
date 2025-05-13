@@ -51,7 +51,7 @@ public class CartActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private String fullName;
     private LinearLayout emptyCartTextView;
-    private TextView removeButton;
+    private TextView removeButton, totsQuan;
     private TextView subTotalTextView;
     private double subTotal = 0.0;
     private ImageView tutorial;
@@ -81,6 +81,7 @@ public class CartActivity extends AppCompatActivity {
         recyclerViewCart.setLayoutManager(new LinearLayoutManager(this));
         emptyCartTextView = findViewById(R.id.emptyCartTextView);
         tutorial = findViewById(R.id.tutorial);
+        totsQuan = findViewById(R.id.totsquantity);
 
         CheckBox selectAllCheckBox = findViewById(R.id.select_all_checkbox);
 
@@ -90,8 +91,11 @@ public class CartActivity extends AppCompatActivity {
                 cartItem.setSelected(isChecked); // Update all items' selection state
             }
             cartAdapter.notifyDataSetChanged(); // Refresh the RecyclerView
-            updateSubTotal(); // Update subtotal based on selection
+            updateSubTotal();
+            updateSelectedQuantity();// Update subtotal based on selection
         });
+
+
 
 
 
@@ -109,14 +113,46 @@ public class CartActivity extends AppCompatActivity {
 
         cartItemList = new ArrayList<>();
 
+        DatabaseReference productsRef = FirebaseDatabase.getInstance().getReference("Products");
+
+
         cartAdapter = new CartAdapter(this, cartItemList, (cartItemId, position) -> {
+
             removeItemFromFirebase(cartItemId, cartItemList.get(position), position);
             updateSubTotal();
+            updateSelectedQuantity();
         }, (cartItem, position) -> {
+            String productName = cartItem.getProductName();
 
-            cartItem.setSelected(!cartItem.isSelected());
-            cartAdapter.notifyItemChanged(position);
-            updateSubTotal();
+            productsRef.orderByChild("ProductName").equalTo(productName)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            boolean isUnavailable = false;
+
+                            for (DataSnapshot productSnapshot : snapshot.getChildren()) {
+                                String status = productSnapshot.child("status").getValue(String.class);
+                                if ("unavailable".equalsIgnoreCase(status)) {
+                                    isUnavailable = true;
+                                    break;
+                                }
+                            }
+
+                            if (isUnavailable) {
+                                Toast.makeText(CartActivity.this, "This item is unavailable. Please choose another item.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                cartItem.setSelected(!cartItem.isSelected());
+                                cartAdapter.notifyItemChanged(position);
+                                updateSubTotal();
+                                updateSelectedQuantity();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Toast.makeText(CartActivity.this, "Error checking product status.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
         });
 
         recyclerViewCart.setAdapter(cartAdapter);
@@ -206,6 +242,7 @@ public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @
                 if (item.isSelected()) {
                     Log.d("CartItem", "Selected Item: " + item.getProductName() + ", Price: " + item.getProductPrice() + ", Quantity: " + item.getQuantity());
                     selectedItems.add(item);
+
                 }
             }
 
@@ -260,7 +297,18 @@ public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @
         return subTotal;
     }
 
-        double calculateItemTotal(CartItem item) {
+    private void updateSelectedQuantity() {
+        int totalQuantity = 0;
+        for (CartItem item : cartItemList) {
+            if (item.isSelected()) {
+                totalQuantity += item.getQuantity(); // assuming getQuantity() returns int
+            }
+        }
+        totsQuan.setText(String.valueOf(totalQuantity));
+    }
+
+
+    double calculateItemTotal(CartItem item) {
         double itemTotal = 0.0;
 
         // Get the product price

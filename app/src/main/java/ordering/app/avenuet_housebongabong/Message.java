@@ -6,9 +6,18 @@ public class Message {
     private long timestamp;
     private String formattedTime;
     private String imageUrl;
+    private String firebaseKey;
 
     // No-argument constructor required for Firebase
     public Message() {
+    }
+
+    public String getFirebaseKey() {
+        return firebaseKey;
+    }
+
+    public void setFirebaseKey(String firebaseKey) {
+        this.firebaseKey = firebaseKey;
     }
 
 

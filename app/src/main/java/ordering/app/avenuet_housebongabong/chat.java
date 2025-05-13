@@ -132,12 +132,13 @@ public class chat extends AppCompatActivity {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 Message message = snapshot.getValue(Message.class);
-
                 if (message != null) {
-                    messageList.add(message);  // Add new message to the list
-                    messageAdapter.notifyItemInserted(messageList.size() - 1);  // Notify the adapter of the new item
-                    recyclerView.scrollToPosition(messageList.size() - 1);  // Scroll to the new message
+                    message.setFirebaseKey(snapshot.getKey());  // Store the key in the message object
+                    messageList.add(message);
+                    messageAdapter.notifyItemInserted(messageList.size() - 1);
+                    recyclerView.scrollToPosition(messageList.size() - 1);
                 }
+
             }
 
             @Override
@@ -147,8 +148,18 @@ public class chat extends AppCompatActivity {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                // Handle message deletions here if needed
+                String removedKey = snapshot.getKey();
+
+                for (int i = 0; i < messageList.size(); i++) {
+                    Message msg = messageList.get(i);
+                    if (msg.getFirebaseKey() != null && msg.getFirebaseKey().equals(removedKey)) {
+                        messageList.remove(i);
+                        messageAdapter.notifyItemRemoved(i);
+                        break;
+                    }
+                }
             }
+
 
             @Override
             public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
